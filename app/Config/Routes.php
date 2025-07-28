@@ -7,8 +7,14 @@ use CodeIgniter\Router\RouteCollection;
  * @var RouteCollection $routes
  */
 $routes = Services::routes();
-if(file_exists(SYSTEMPATH . 'Config/Routes.php')) {
-    require SYSTEMPATH . 'Config/Routes.php';
+
+$modules = ['Admin', 'Counter', 'Customer'];
+
+foreach ($modules as $module) {
+    $path = APPPATH . 'Modules/' . $module . '/Config/Routes.php';
+    if (file_exists($path)) {
+        require $path;
+    }
 }
 
-$routes->get('/', 'Home::index');
+
