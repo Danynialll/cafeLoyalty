@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Coffee Café Ordering Interface</title>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -57,14 +58,16 @@
 <body>
 <div class="menu">
     <h2>☕ Menu</h2>
-    <button onclick="addItem('Latte', 12)">Latte - RM12</button>
-    <button onclick="addItem('Cappuccino', 10)">Cappuccino - RM10</button>
-    <button onclick="addItem('Mocha', 13)">Mocha - RM13</button>
+    <?php foreach ($items as $item): ?>
+        <button onclick="addItem(<?= $item['it_id'] ?>, '<?= htmlspecialchars(addslashes($item['it_name'])) ?>', <?= $item['it_price'] ?>)"><?= $item['it_name'] ?> - RM<?= $item['it_price'] ?></button>
+    <?php endforeach; ?>
 
     <h3>🎯 Loyalty</h3>
-    <input type="text" placeholder="Enter phone number" id="phone-input">
-    <button onclick="fetchCustomerByPhone()">Lookup</button>
-    <button onclick="startScanner()">📷 Scan Loyalty Card</button>
+    <div style="display:flex; flex-direction: row;">
+        <input style="width:250px; height:auto" type="text" placeholder="Enter phone number" id="phone-input">
+        <button style="width:250px; height:auto" onclick="fetchCustomerByPhone()">Search By Number</button>
+    </div>
+    <button style="width:300px;" onclick="startScanner()">📷 Scan Loyalty Card</button>
     <div id="scanner-container"></div>
 </div>
 
@@ -80,7 +83,7 @@
     </div>
     <p>Total: <span class="highlight" id="total">RM0</span></p>
     <p>Redeemable Points: <span class="highlight" id="redeemed">0</span></p>
-    <form id="order-form" action="/counter/submit" method="POST">
+    <form id="order-form">
         <input type="hidden" name="order_json" id="order-json">
         <input type="hidden" name="customer_phone" id="hidden-phone">
         <input type="hidden" name="redeemable" id="redeemable">
@@ -122,8 +125,8 @@
     let order = [];
     let currentItem = null;
 
-    function addItem(name, price) {
-        currentItem = { name, price };
+    function addItem(it_id, it_name, it_price) {
+        currentItem = { it_id, it_name, it_price };
         document.getElementById('customize-modal').style.display = 'block';
     }
 
@@ -151,9 +154,9 @@
 
         order.forEach((item, index) => {
             const li = document.createElement('li');
-            li.textContent = `${item.name} - RM${item.price} (Sweet: ${item.sweetness}, Ice: ${item.ice}, Cream: ${item.cream}) x ${item.quantity}`;
+            li.textContent = `${item.it_name} - RM${item.it_price} (Sweet: ${item.sweetness}, Ice: ${item.ice}, Cream: ${item.cream}) x ${item.quantity}`;
             itemsList.appendChild(li);
-            total += item.price;
+            total += item.it_price;
         });
 
         document.getElementById('total').textContent = `RM${total}`;
@@ -172,7 +175,11 @@
                     document.getElementById('cust-points').textContent = data.user.points;
                     document.getElementById('hidden-phone').value = phone;
                 } else {
-                    alert("User not found.");
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'User not found.',
+                    });
                 }
             });
     }
@@ -212,6 +219,43 @@
             });
         });
     }
+</script>
+<script>
+    document.getElementById('order-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        const formData = new FormData(this);
+
+        fetch("<?= base_url('/counter/submit') ?>", {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: data.message,
+                    }).then(() => {
+                        location.reload();
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: data.message || 'Failed to submit order.',
+                    });
+                }
+            })
+            .catch(() => {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'An unexpected error occurred.',
+                });
+            });
+    });
 </script>
 </body>
 </html>

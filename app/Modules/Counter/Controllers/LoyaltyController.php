@@ -7,10 +7,7 @@ use App\Controllers\BaseController;
 
 class LoyaltyController extends BaseController
 {
-    public function index()
-    {
-        return view('App\Modules\Counter\Views\index');
-    }
+    
 
     public function checkCode($code = null)
     {

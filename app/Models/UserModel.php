@@ -14,8 +14,6 @@ class UserModel extends Model
         'phone',
         'membership_id',
         'points',
-        'created_at',
-        'updated_at',
     ];
 
     protected $useTimestamps = true;
