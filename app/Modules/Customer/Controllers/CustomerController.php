@@ -1,11 +1,12 @@
 <?php
 
-namespace Modules\Counter\Controllers;
+namespace Modules\Customer\Controllers;
 
 use App\Models\ItemModel;
+use App\Models\UserModel;
 use App\Controllers\BaseController;
 
-class CounterController extends BaseController
+class CustomerController extends BaseController
 {
     protected $users_model;
     protected $items_model;
@@ -20,7 +21,7 @@ class CounterController extends BaseController
     public function index()
     {
         $items = $this->items_model->findAll();
-        return view('App\Modules\Counter\Views\index', [
+        return view('App\Modules\Customer\Views\home', [
             'items' => $items
         ]);
     }
