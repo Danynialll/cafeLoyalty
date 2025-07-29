@@ -83,6 +83,7 @@
     <form id="order-form" action="/counter/submit" method="POST">
         <input type="hidden" name="order_json" id="order-json">
         <input type="hidden" name="customer_phone" id="hidden-phone">
+        <input type="hidden" name="redeemable" id="redeemable">
         <button type="submit">Submit Order</button>
     </form>
 </div>
@@ -157,6 +158,7 @@
 
         document.getElementById('total').textContent = `RM${total}`;
         document.getElementById('redeemed').textContent = Math.floor(total);
+        document.getElementById('redeemable').value = Math.floor(total);
         document.getElementById('order-json').value = JSON.stringify(order);
     }
 

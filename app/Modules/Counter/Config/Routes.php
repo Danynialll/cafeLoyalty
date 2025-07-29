@@ -10,7 +10,7 @@ use Modules\Counter\Controllers\LoyaltyController;
  */
 
 $routes->get('/', function () {
-    return redirect()->to('/loyalty');
+    return redirect()->to('/counter/loyalty');
 });
 
 $routes->group('counter', function($routes) {

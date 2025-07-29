@@ -11,8 +11,22 @@ class SubmitController extends BaseController
     {
         $model = new UserModel();
         $phone = $this->request->getPost('customer_phone');
-        $order = $this->request->getPost('order_json');
-        dd($phone, $order);
+        $redeemable = $this->request->getPost('redeemable');
+        $json = $this->request->getPost('order_json');
+        $orderItems = json_decode($json, true);
+
+        dd($redeemable);
+
+        foreach ($orderItems as $item) {
+            $model->insert([
+                'name'      => $item['name'],
+                'price'     => $item['price'],
+                'quantity'  => $item['quantity']
+            ]);
+        }
+
+
+        
     
     }
 }
