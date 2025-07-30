@@ -475,6 +475,12 @@
             }
         }
 
+        @media (max-width: 768px) {
+            .desktop-nav {
+                display: none;
+            }
+        }
+
         @keyframes bounce {
             0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
             40% { transform: translateY(-10px); }
@@ -503,23 +509,18 @@
 <body>
     <div class="container">
         <!-- Desktop Navigation -->
-        <div class="desktop-nav">
-            <div class="desktop-nav-item active">Home</div>
-            <div class="desktop-nav-item">Rewards</div>
-            <div class="desktop-nav-item">Stores</div>
-            <div class="desktop-nav-item">Profile</div>
-        </div>
+        
 
         <div class="header">
             <div class="welcome">
-                <h1>Welcome back, Alex! 👋</h1>
+                <h1>Welcome back, <?=$name?> 👋</h1>
                 <p>Ready to unlock amazing rewards?</p>
             </div>
             
             <div class="points-card">
                 <div class="points-display">
                     <div class="points-label">Your Reward Points</div>
-                    <div class="points-value" id="pointsValue">2,847</div>
+                    <div class="points-value" id="pointsValue"><?=$points?></div>
                 </div>
                 <div class="points-actions">
                     <button class="btn btn-primary" onclick="earnPoints()">Earn More</button>
@@ -532,6 +533,12 @@
                 <button class="sidebar-btn sidebar-btn-primary" onclick="scanQR()">📱 Scan QR Code</button>
                 <button class="sidebar-btn sidebar-btn-secondary" onclick="findStores()">🏪 Find Stores</button>
                 <button class="sidebar-btn sidebar-btn-secondary" onclick="referFriend()">👥 Refer Friends</button>
+                <div class="desktop-nav">
+                    <div class="desktop-nav-item active">Home</div>
+                    <div class="desktop-nav-item">Rewards</div>
+                    <div class="desktop-nav-item">Stores</div>
+                    <div class="desktop-nav-item">Profile</div>
+                </div>
             </div>
         </div>
 
@@ -629,22 +636,6 @@
     </div>
 
     <script>
-        // Animate points counter on load
-        function animatePoints() {
-            const pointsElement = document.getElementById('pointsValue');
-            const finalValue = 2847;
-            let currentValue = 0;
-            const increment = finalValue / 50;
-            
-            const counter = setInterval(() => {
-                currentValue += increment;
-                if (currentValue >= finalValue) {
-                    currentValue = finalValue;
-                    clearInterval(counter);
-                }
-                pointsElement.textContent = Math.floor(currentValue).toLocaleString();
-            }, 30);
-        }
 
         // Button interactions
         function earnPoints() {

@@ -7,16 +7,18 @@ use CodeIgniter\Model;
 class UserModel extends Model
 {
     protected $table = 'users';
-    protected $primaryKey = 'id';
+    protected $primaryKey = 'u_id';
 
     protected $allowedFields = [
-        'name',
-        'phone',
-        'membership_id',
-        'points',
+        'u_au_id',
+        'u_name',
+        'u_email',
+        'u_phone',
+        'u_membership_id',
+        'u_points',
     ];
 
     protected $useTimestamps = true;
-    protected $createdField  = 'created_at';
-    protected $updatedField  = 'updated_at';
+    protected $createdField  = 'u_created_at';
+    protected $updatedField  = 'u_updated_at';
 }

@@ -2,27 +2,55 @@
 
 namespace Modules\Customer\Controllers;
 
-use App\Models\ItemModel;
 use App\Models\UserModel;
 use App\Controllers\BaseController;
 
 class CustomerController extends BaseController
 {
     protected $users_model;
-    protected $items_model;
-    protected $sales_model;
+    
 
     public function __construct()
     {
-        $this->items_model             = new ItemModel();
+        $this->users_model             = new UserModel();
         $this->session                = service('session');
     }
 
     public function index()
     {
-        $items = $this->items_model->findAll();
-        return view('App\Modules\Customer\Views\home', [
-            'items' => $items
-        ]);
+        $user_id = $this->session->get('user_id');
+        if (!$user_id) {
+            return redirect()->to('/customer/login');
+        }
+        $user = $this->users_model->where('u_id', $user_id)->first();
+
+        $data = [
+            'name' => $user['u_name'],
+            'email' => $user['u_email'],
+            'phone' => $user['u_phone'],
+            'points' => $user['u_points'],
+            'membership_id' => $user['u_membership_id'],
+        ];
+        
+        return view('App\Modules\Customer\Views\dashboard', $data);
+    }
+
+    public function membership()
+    {
+        $user_id = $this->session->get('user_id');
+        if (!$user_id) {
+            return redirect()->to('/customer/login');
+        }
+        $user = $this->users_model->where('u_id', $user_id)->first();
+
+        $data = [
+            'name' => $user['u_name'],
+            'email' => $user['u_email'],
+            'phone' => $user['u_phone'],
+            'points' => $user['u_points'],
+            'membership_id' => $user['u_membership_id'],
+        ];
+
+        return view('App\Modules\Customer\Views\membership', $data);
     }
 }

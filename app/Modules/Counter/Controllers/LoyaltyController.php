@@ -12,15 +12,15 @@ class LoyaltyController extends BaseController
     public function checkCode($code = null)
     {
         $model = new UserModel();
-        $user = $model->where('membership_id', $code)->first();
+        $user = $model->where('u_membership_id', $code)->first();
 
         if ($user) {
             return $this->respond([
                 'success' => true,
                 'user' => [
-                    'name' => $user['name'],
-                    'points' => $user['points'],
-                    'created_at' => $user['created_at']
+                    'name' => $user['u_name'],
+                    'points' => $user['u_points'],
+                    'created_at' => $user['u_created_at']
                 ]
             ]);
         } else {
@@ -34,15 +34,15 @@ class LoyaltyController extends BaseController
     public function checkNum($num = null)
     {
         $model = new UserModel();
-        $user = $model->where('phone', $num)->first();
+        $user = $model->where('u_phone', $num)->first();
 
         if ($user) {
             return $this->respond([
                 'success' => true,
                 'user' => [
-                    'name' => $user['name'],
-                    'points' => $user['points'],
-                    'created_at' => $user['created_at']
+                    'name' => $user['u_name'],
+                    'points' => $user['u_points'],
+                    'created_at' => $user['u_created_at']
                 ]
             ]);
         } else {
