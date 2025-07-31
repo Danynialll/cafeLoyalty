@@ -53,4 +53,81 @@ class CustomerController extends BaseController
 
         return view('App\Modules\Customer\Views\membership', $data);
     }
+
+    public function history()
+    {
+        $user_id = $this->session->get('user_id');
+        if (!$user_id) {
+            return redirect()->to('/customer/login');
+        }
+        $user = $this->users_model->where('u_id', $user_id)->first();
+
+        $data = [
+            'name' => $user['u_name'],
+            'email' => $user['u_email'],
+            'phone' => $user['u_phone'],
+            'points' => $user['u_points'],
+            'membership_id' => $user['u_membership_id'],
+        ];
+
+        return view('App\Modules\Customer\Views\history', $data);
+    }
+
+    public function order()
+    {
+        $user_id = $this->session->get('user_id');
+        if (!$user_id) {
+            return redirect()->to('/customer/login');
+        }
+        $user = $this->users_model->where('u_id', $user_id)->first();
+
+        $data = [
+            'name' => $user['u_name'],
+            'email' => $user['u_email'],
+            'phone' => $user['u_phone'],
+            'points' => $user['u_points'],
+            'membership_id' => $user['u_membership_id'],
+        ];
+
+        return view('App\Modules\Customer\Views\order', $data);
+    }
+
+    public function voucher()
+    {
+        $user_id = $this->session->get('user_id');
+        if (!$user_id) {
+            return redirect()->to('/customer/login');
+        }
+        $user = $this->users_model->where('u_id', $user_id)->first();
+
+        $data = [
+            'name' => $user['u_name'],
+            'email' => $user['u_email'],
+            'phone' => $user['u_phone'],
+            'points' => $user['u_points'],
+            'membership_id' => $user['u_membership_id'],
+        ];
+
+        return view('App\Modules\Customer\Views\voucher', $data);
+    }
+
+    public function profile()
+    {
+        $user_id = $this->session->get('user_id');
+        if (!$user_id) {
+            return redirect()->to('/customer/login');
+        }
+        $user = $this->users_model->where('u_id', $user_id)->first();
+
+        $data = [
+            'name' => $user['u_name'],
+            'email' => $user['u_email'],
+            'phone' => $user['u_phone'],
+            'points' => $user['u_points'],
+            'membership_id' => $user['u_membership_id'],
+        ];
+
+        return view('App\Modules\Customer\Views\profile', $data);
+    }
+
 }

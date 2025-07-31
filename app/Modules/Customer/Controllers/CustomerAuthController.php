@@ -5,6 +5,7 @@ namespace Modules\Customer\Controllers;
 use App\Models\UserModel;
 use App\Models\AuthUsersModel;
 use App\Controllers\BaseController;
+use Twilio\Rest\Client;
 
 class CustomerAuthController extends BaseController
 {
@@ -100,9 +101,91 @@ class CustomerAuthController extends BaseController
         }
     }
 
+        
+    public function sendOtpWhatsApp()
+    {
+        $request = $this->request->getJSON();
+        $phone = trim($request->phone); // e.g., 0123456789
+
+        // ✅ Normalize phone to +60 format
+        if (strpos($phone, '+') !== 0) {
+            if (substr($phone, 0, 1) === '0') {
+                $phone = substr($phone, 1); // remove leading 0
+            }
+            $phone = '+60' . $phone;
+        }
+
+        $userModel = new UserModel();
+        $user = $userModel->where('u_phone', $phone)->first();
+
+        if (!$user) {
+            return $this->response->setJSON(['success' => false, 'message' => 'User with this phone does not exist.']);
+        }
+
+        $otp = rand(100000, 999999);
+        session()->set("otp_$phone", $otp);
+
+        try {
+            $twilio = new Client($_ENV['TWILIO_SID'], $_ENV['TWILIO_TOKEN']);
+
+            $twilio->messages->create(
+                "whatsapp:$phone",
+                [
+                    'from' => $_ENV['TWILIO_WHATSAPP_FROM'],
+                    'body' => "Your OTP is: $otp. Do not share this code."
+                ]
+            );
+
+            return $this->response->setJSON(['success' => true, 'message' => 'OTP sent via WhatsApp.']);
+        } catch (\Exception $e) {
+            return $this->response->setJSON(['success' => false, 'message' => 'Failed to send WhatsApp message: ' . $e->getMessage()]);
+        }
+    }
+
+
+    public function verifyOtp()
+    {
+        $request = $this->request->getJSON();
+        $phone = trim($request->phone);
+        $otp = $request->otp;
+
+        // ✅ Normalize phone again for session key matching
+        if (strpos($phone, '+') !== 0) {
+            if (substr($phone, 0, 1) === '0') {
+                $phone = substr($phone, 1);
+            }
+            $phone = '+60' . $phone;
+        }
+
+        $storedOtp = session()->get("otp_$phone");
+
+        if ($otp == $storedOtp) {
+            session()->remove("otp_$phone");
+
+            $userModel = new \App\Models\UserModel();
+            $user = $userModel->where('u_phone', $phone)->first();
+
+            if (!$user) {
+                return $this->response->setJSON(['success' => false, 'message' => 'User not found.']);
+            }
+
+            session()->set('user_id', $user['u_id']);
+
+            return $this->response->setJSON([
+                'success' => true,
+                'message' => 'Login successful.',
+                'redirect' => '/customer/dashboard'
+            ]);
+        } else {
+            return $this->response->setJSON(['success' => false, 'message' => 'Invalid OTP']);
+        }
+    }
+
+
+
     public function logout()
     {
         session()->destroy();
-        return redirect()->to('/login');
+        return redirect()->to('customer/login');
     }
 }

@@ -20,6 +20,7 @@ class LoyaltyController extends BaseController
                 'user' => [
                     'name' => $user['u_name'],
                     'points' => $user['u_points'],
+                    'phone' => $user['u_phone'],
                     'created_at' => $user['u_created_at']
                 ]
             ]);

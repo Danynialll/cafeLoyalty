@@ -213,6 +213,7 @@
                 if (data.success) {
                     document.getElementById('cust-name').textContent = data.user.name;
                     document.getElementById('cust-points').textContent = data.user.points;
+                    document.getElementById('hidden-phone').value = data.user.phone;
                 } else {
                     alert("User not found.");
                 }

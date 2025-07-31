@@ -28,13 +28,13 @@ class SubmitController extends BaseController
         $phone = $this->request->getPost('customer_phone');
         $redeemable = $this->request->getPost('redeemable');
         if ($phone) {
-            $user = $this->users_model->where('phone', $phone)->select('id, points')->first();
+            $user = $this->users_model->where('u_phone', $phone)->select('u_id, u_points')->first();
 
-            $points = (int) $user['points'];
+            $points = (int) $user['u_points'];
             $redeemable = (int) $this->request->getPost('redeemable');
             $updated_points = $points + $redeemable;
 
-            $this->users_model->update($user['id'], ['points' => $updated_points]);
+            $this->users_model->update($user['u_id'], ['u_points' => $updated_points]);
         }
         
         $json = $this->request->getPost('order_json');
