@@ -130,4 +130,17 @@ class CustomerController extends BaseController
         return view('App\Modules\Customer\Views\profile', $data);
     }
 
+    public function spinWheel()
+    {
+        // Define segments and their winning percentages
+        $segments = [
+            ['label' => 'Prize 1', 'percentage' => 10],
+            ['label' => 'Prize 2', 'percentage' => 20],
+            ['label' => 'Prize 3', 'percentage' => 30],
+            ['label' => 'Try Again', 'percentage' => 40],
+        ];
+
+        return view('App\Modules\Customer\Views\spin_wheel', ['segments' => $segments]);
+    }
+
 }

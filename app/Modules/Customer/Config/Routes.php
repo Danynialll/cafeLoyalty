@@ -23,6 +23,7 @@ $routes->group('customer', function($routes) {
     $routes->get('order', [CustomerController::class, 'order']);
     $routes->get('voucher', [CustomerController::class, 'voucher']);
     $routes->get('profile', [CustomerController::class, 'profile']);
+    $routes->get('spin_wheel', [CustomerController::class, 'spinWheel']);
 
     $routes->post('sendOtpWhatsapp', [CustomerAuthController::class, 'sendOtpWhatsApp']);
     $routes->post('verifyOtp', [CustomerAuthController::class, 'verifyOtp']);
